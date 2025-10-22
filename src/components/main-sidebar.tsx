@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
+import type { User } from '@/lib/types';
 
 const patientNav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
