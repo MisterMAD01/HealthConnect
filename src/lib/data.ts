@@ -4,25 +4,25 @@ import { PlaceHolderImages } from './placeholder-images';
 const getAvatar = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || '';
 
 export const users: User[] = [
-  { uid: 'patient1', name: 'Liam Carter', email: 'liam.carter@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-1') },
-  { uid: 'patient2', name: 'Olivia Chen', email: 'olivia.chen@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-2') },
-  { uid: 'doctor1', name: 'Dr. Evelyn Reed', email: 'evelyn.reed@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-3'), verificationStatus: 'Verified' },
-  { uid: 'doctor2', name: 'Dr. Ben Stone', email: 'ben.stone@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-4'), verificationStatus: 'Pending' },
-  { uid: 'admin1', name: 'Noah Patel', email: 'noah.patel@hospital.com', role: 'Hospital Admin', avatarUrl: getAvatar('avatar-5') },
-  { uid: 'doctor3', name: 'Dr. Chloe King', email: 'chloe.king@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-6'), verificationStatus: 'Rejected' },
+  { uid: 'patient1', name: 'เลียม คาร์เตอร์', email: 'liam.carter@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-1') },
+  { uid: 'patient2', name: 'โอลิเวีย เฉิน', email: 'olivia.chen@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-2') },
+  { uid: 'doctor1', name: 'พญ. เอเวลิน รีด', email: 'evelyn.reed@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-3'), verificationStatus: 'Verified' },
+  { uid: 'doctor2', name: 'นพ. เบน สโตน', email: 'ben.stone@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-4'), verificationStatus: 'Pending' },
+  { uid: 'admin1', name: 'โนอาห์ พาเทล', email: 'noah.patel@hospital.com', role: 'Hospital Admin', avatarUrl: getAvatar('avatar-5') },
+  { uid: 'doctor3', name: 'พญ. โคลอี้ คิง', email: 'chloe.king@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-6'), verificationStatus: 'Rejected' },
 ];
 
 export const appointments: Appointment[] = [
-  { id: 'appt1', patientId: 'patient1', patientName: 'Liam Carter', doctorId: 'doctor1', doctorName: 'Dr. Evelyn Reed', date: new Date().toISOString().split('T')[0], time: '10:00 AM', status: 'Scheduled' },
-  { id: 'appt2', patientId: 'patient2', patientName: 'Olivia Chen', doctorId: 'doctor1', doctorName: 'Dr. Evelyn Reed', date: new Date().toISOString().split('T')[0], time: '11:30 AM', status: 'Scheduled' },
-  { id: 'appt3', patientId: 'patient1', patientName: 'Liam Carter', doctorId: 'doctor2', doctorName: 'Dr. Ben Stone', date: '2024-08-15', time: '02:00 PM', status: 'Completed' },
-  { id: 'appt4', patientId: 'patient2', patientName: 'Olivia Chen', doctorId: 'doctor3', doctorName: 'Dr. Chloe King', date: '2024-08-18', time: '09:00 AM', status: 'Cancelled' },
+  { id: 'appt1', patientId: 'patient1', patientName: 'เลียม คาร์เตอร์', doctorId: 'doctor1', doctorName: 'พญ. เอเวลิน รีด', date: new Date().toISOString().split('T')[0], time: '10:00 น.', status: 'Scheduled' },
+  { id: 'appt2', patientId: 'patient2', patientName: 'โอลิเวีย เฉิน', doctorId: 'doctor1', doctorName: 'พญ. เอเวลิน รีด', date: new Date().toISOString().split('T')[0], time: '11:30 น.', status: 'Scheduled' },
+  { id: 'appt3', patientId: 'patient1', patientName: 'เลียม คาร์เตอร์', doctorId: 'doctor2', doctorName: 'นพ. เบน สโตน', date: '2024-08-15', time: '14:00 น.', status: 'Completed' },
+  { id: 'appt4', patientId: 'patient2', patientName: 'โอลิเวีย เฉิน', doctorId: 'doctor3', doctorName: 'พญ. โคลอี้ คิง', date: '2024-08-18', time: '09:00 น.', status: 'Cancelled' },
 ];
 
 const medications: Medication[] = [
-    { id: 'med1', name: 'Lisinopril', dosage: '10mg', frequency: 'Once a day', reminders: true },
-    { id: 'med2', name: 'Metformin', dosage: '500mg', frequency: 'Twice a day', reminders: true },
-    { id: 'med3', name: 'Ibuprofen', dosage: '200mg', frequency: 'As needed for pain', reminders: false },
+    { id: 'med1', name: 'Lisinopril', dosage: '10mg', frequency: 'วันละครั้ง', reminders: true },
+    { id: 'med2', name: 'Metformin', dosage: '500mg', frequency: 'วันละสองครั้ง', reminders: true },
+    { id: 'med3', name: 'Ibuprofen', dosage: '200mg', frequency: 'เมื่อมีอาการปวด', reminders: false },
 ];
 
 export const ehrs: EHR[] = [
@@ -33,9 +33,9 @@ export const ehrs: EHR[] = [
     bloodPressure: '120/80 mmHg', 
     heartRate: 72, 
     temperature: 98.6, 
-    allergies: ['Peanuts'], 
+    allergies: ['ถั่วลิสง'], 
     medications: medications,
-    notes: 'Patient is in good health. Follow up in 6 months.',
+    notes: 'ผู้ป่วยมีสุขภาพดี ติดตามผลใน 6 เดือน',
     fullRecord: `
 Patient: Liam Carter (DOB: 1985-05-15)
 Last Visit: 2024-07-20
@@ -95,9 +95,9 @@ Follow-up in 6 months for blood pressure check. Return sooner if any new concern
     bloodPressure: '130/85 mmHg', 
     heartRate: 80, 
     temperature: 99.1, 
-    allergies: ['None'], 
+    allergies: ['ไม่มี'], 
     medications: [],
-    notes: 'Slightly elevated blood pressure. Recommended diet and exercise changes.',
+    notes: 'ความดันโลหิตสูงเล็กน้อย แนะนำให้เปลี่ยนแปลงอาหารและการออกกำลังกาย',
     fullRecord: `
 Patient: Olivia Chen (DOB: 1992-11-22)
 Last Visit: 2024-07-18

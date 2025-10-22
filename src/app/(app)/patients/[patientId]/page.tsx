@@ -21,10 +21,10 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
   if (!patient || !ehr) {
     return (
         <div>
-            <PageHeader title="Patient Not Found" />
-            <p>The requested patient record could not be found.</p>
+            <PageHeader title="ไม่พบผู้ป่วย" />
+            <p>ไม่พบบันทึกผู้ป่วยที่ร้องขอ</p>
             <Button asChild variant="link">
-                <Link href="/patients">Return to patient list</Link>
+                <Link href="/patients">กลับไปที่รายชื่อผู้ป่วย</Link>
             </Button>
         </div>
     )
@@ -34,7 +34,7 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
     <>
       <PageHeader
         title={patient.name}
-        description={`Viewing the electronic health record for ${patient.name}.`}
+        description={`กำลังดูบันทึกสุขภาพอิเล็กทรอนิกส์สำหรับ ${patient.name}`}
       >
         <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
@@ -43,7 +43,7 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
             </Avatar>
             <div>
                 <p className="font-medium">{patient.email}</p>
-                <p className="text-sm text-muted-foreground">Patient ID: {patient.uid}</p>
+                <p className="text-sm text-muted-foreground">รหัสผู้ป่วย: {patient.uid}</p>
             </div>
         </div>
       </PageHeader>
@@ -53,28 +53,28 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
 
         <Card>
             <CardHeader>
-                <CardTitle>Vitals</CardTitle>
-                <CardDescription>Last recorded on {new Date(ehr.lastUpdated).toLocaleDateString()}</CardDescription>
+                <CardTitle>สัญญาณชีพ</CardTitle>
+                <CardDescription>บันทึกล่าสุดเมื่อ {new Date(ehr.lastUpdated).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
             </CardHeader>
             <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="flex items-center gap-3 p-4 bg-secondary/30 rounded-lg">
                     <HeartPulse className="h-6 w-6 text-primary" />
-                    <div><p className="text-sm text-muted-foreground">Blood Pressure</p><p className="font-semibold">{ehr.bloodPressure}</p></div>
+                    <div><p className="text-sm text-muted-foreground">ความดันโลหิต</p><p className="font-semibold">{ehr.bloodPressure}</p></div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-secondary/30 rounded-lg">
                     <Droplets className="h-6 w-6 text-primary" />
-                    <div><p className="text-sm text-muted-foreground">Heart Rate</p><p className="font-semibold">{ehr.heartRate} BPM</p></div>
+                    <div><p className="text-sm text-muted-foreground">อัตราการเต้นของหัวใจ</p><p className="font-semibold">{ehr.heartRate} BPM</p></div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-secondary/30 rounded-lg">
                     <Thermometer className="h-6 w-6 text-primary" />
-                    <div><p className="text-sm text-muted-foreground">Temperature</p><p className="font-semibold">{ehr.temperature}°F</p></div>
+                    <div><p className="text-sm text-muted-foreground">อุณหภูมิ</p><p className="font-semibold">{ehr.temperature}°F</p></div>
                 </div>
             </CardContent>
         </Card>
 
         <div className="grid md:grid-cols-2 gap-8">
             <Card>
-                <CardHeader><CardTitle className="flex items-center gap-2"><AlertTriangle />Allergies</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="flex items-center gap-2"><AlertTriangle />ประวัติการแพ้</CardTitle></CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-2">
                         {ehr.allergies.map(a => <Badge key={a} variant="destructive">{a}</Badge>)}
@@ -82,7 +82,7 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
                 </CardContent>
             </Card>
              <Card>
-                <CardHeader><CardTitle className="flex items-center gap-2"><Pill />Medications</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="flex items-center gap-2"><Pill />ยาที่ใช้</CardTitle></CardHeader>
                 <CardContent>
                     <ul className="list-disc list-inside space-y-1">
                         {ehr.medications.map(m => <li key={m.id}>{m.name} ({m.dosage})</li>)}
@@ -93,24 +93,24 @@ export default function PatientRecordPage({ params }: { params: { patientId: str
 
         <Card>
             <CardHeader>
-                <CardTitle>Update Record</CardTitle>
-                <CardDescription>Add new notes or upload documents to the patient's record.</CardDescription>
+                <CardTitle>อัปเดตบันทึก</CardTitle>
+                <CardDescription>เพิ่มบันทึกใหม่หรืออัปโหลดเอกสารไปยังบันทึกของผู้ป่วย</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div>
-                    <Label htmlFor="notes" className="font-semibold">Doctor's Notes</Label>
-                    <Textarea id="notes" placeholder="Enter new notes here..." className="mt-2" defaultValue={ehr.notes} />
+                    <Label htmlFor="notes" className="font-semibold">บันทึกของแพทย์</Label>
+                    <Textarea id="notes" placeholder="ป้อนบันทึกใหม่ที่นี่..." className="mt-2" defaultValue={ehr.notes} />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="document" className="font-semibold">Upload Document</Label>
+                    <Label htmlFor="document" className="font-semibold">อัปโหลดเอกสาร</Label>
                     <div className="flex items-center gap-2">
                         <Input id="document" type="file" className="flex-1" />
-                        <Button variant="outline"><FileUp className="mr-2 h-4 w-4" />Upload</Button>
+                        <Button variant="outline"><FileUp className="mr-2 h-4 w-4" />อัปโหลด</Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">e.g., Lab results, imaging reports. (UI for demonstration)</p>
+                    <p className="text-xs text-muted-foreground">เช่น ผลตรวจทางห้องปฏิบัติการ, รายงานภาพถ่าย (UI สำหรับการสาธิต)</p>
                 </div>
                 <div className="flex justify-end">
-                    <Button><Save className="mr-2 h-4 w-4" />Save Changes</Button>
+                    <Button><Save className="mr-2 h-4 w-4" />บันทึกการเปลี่ยนแปลง</Button>
                 </div>
             </CardContent>
         </Card>

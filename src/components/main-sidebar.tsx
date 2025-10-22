@@ -31,27 +31,33 @@ import Image from 'next/image';
 import type { User as UserType } from '@/lib/types';
 
 const patientNav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/appointments', label: 'Book Appointment', icon: CalendarPlus },
-  { href: '/records', label: 'My Records', icon: FileText },
-  { href: '/medications', label: 'Medications', icon: Pill },
+  { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
+  { href: '/appointments', label: 'จองนัดหมาย', icon: CalendarPlus },
+  { href: '/records', label: 'บันทึกของฉัน', icon: FileText },
+  { href: '/medications', label: 'ยา', icon: Pill },
 ];
 
 const doctorNav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/patients', label: 'Patients', icon: Users },
+  { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
+  { href: '/patients', label: 'ผู้ป่วย', icon: Users },
 ];
 
 const adminNav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/staff', label: 'Staff Management', icon: Users },
-  { href: '/analytics', label: 'Analytics', icon: BarChart2 },
+  { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
+  { href: '/staff', label: 'จัดการบุคลากร', icon: Users },
+  { href: '/analytics', label: 'การวิเคราะห์', icon: BarChart2 },
 ];
 
 const navItems = {
   Patient: patientNav,
   Doctor: doctorNav,
   'Hospital Admin': adminNav,
+};
+
+const roleTranslations: { [key: string]: string } = {
+    Patient: 'ผู้ป่วย',
+    Doctor: 'แพทย์',
+    'Hospital Admin': 'ผู้ดูแลระบบโรงพยาบาล'
 };
 
 export function MainSidebar() {
@@ -77,6 +83,7 @@ export function MainSidebar() {
   if (!user) return null;
 
   const currentNav = navItems[user.role as keyof typeof navItems];
+  const translatedRole = roleTranslations[user.role];
 
   return (
     <Sidebar>
@@ -92,12 +99,12 @@ export function MainSidebar() {
         <SidebarMenu>
           {currentNav.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild isActive={pathname === item.href}>
-                <Link href={item.href}>
-                  <item.icon />
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
+                <SidebarMenuButton asChild isActive={pathname === item.href}>
+                    <Link href={item.href}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                    </Link>
+                </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -112,13 +119,13 @@ export function MainSidebar() {
             <span className="font-semibold truncate">{user.name}</span>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 {getRoleIcon(user.role)}
-                <span>{user.role}</span>
+                <span>{translatedRole}</span>
             </div>
           </div>
         </div>
         <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
-          Logout
+          ออกจากระบบ
         </Button>
       </SidebarFooter>
     </Sidebar>

@@ -15,7 +15,7 @@ import { Search } from 'lucide-react';
 export default function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   
-  // In a real app, this would be a filtered list of a specific doctor's patients
+  // ในแอปจริง นี่จะเป็นรายชื่อผู้ป่วยที่กรองแล้วของแพทย์คนใดคนหนึ่ง
   const allPatients = users.filter(u => u.role === 'Patient');
 
   const filteredPatients = allPatients.filter(patient =>
@@ -24,20 +24,20 @@ export default function PatientsPage() {
   
   const getPatientLastUpdate = (patientId: string) => {
     const ehr = ehrs.find(e => e.patientId === patientId);
-    return ehr ? new Date(ehr.lastUpdated).toLocaleDateString() : 'N/A';
+    return ehr ? new Date(ehr.lastUpdated).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
   }
 
   return (
     <>
       <PageHeader
-        title="My Patients"
-        description="View and manage your patient records."
+        title="ผู้ป่วยของฉัน"
+        description="ดูและจัดการบันทึกผู้ป่วยของคุณ"
       >
         <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
                 type="search"
-                placeholder="Search patients..."
+                placeholder="ค้นหาผู้ป่วย..."
                 className="pl-8 sm:w-[300px]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -49,10 +49,10 @@ export default function PatientsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead className="hidden md:table-cell">Email</TableHead>
-                <TableHead className="hidden sm:table-cell">Last Update</TableHead>
-                <TableHead><span className="sr-only">Actions</span></TableHead>
+                <TableHead>ชื่อ</TableHead>
+                <TableHead className="hidden md:table-cell">อีเมล</TableHead>
+                <TableHead className="hidden sm:table-cell">อัปเดตล่าสุด</TableHead>
+                <TableHead><span className="sr-only">การดำเนินการ</span></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -71,7 +71,7 @@ export default function PatientsPage() {
                   <TableCell className="hidden sm:table-cell">{getPatientLastUpdate(patient.uid)}</TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="outline" size="sm">
-                      <Link href={`/patients/${patient.uid}`}>View Record</Link>
+                      <Link href={`/patients/${patient.uid}`}>ดูบันทึก</Link>
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -80,7 +80,7 @@ export default function PatientsPage() {
           </Table>
            {filteredPatients.length === 0 && (
             <div className="text-center p-8 text-muted-foreground">
-              No patients found.
+              ไม่พบผู้ป่วย
             </div>
            )}
         </CardContent>

@@ -33,37 +33,37 @@ export function DoctorDashboard() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium">นัดหมายวันนี้</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{todaysAppointments.length}</div>
-            <p className="text-xs text-muted-foreground">scheduled for today</p>
+            <p className="text-xs text-muted-foreground">ที่นัดไว้สำหรับวันนี้</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Patients Seen Today</CardTitle>
+            <CardTitle className="text-sm font-medium">ผู้ป่วยที่ตรวจแล้ววันนี้</CardTitle>
             <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{completedAppointments}</div>
-            <p className="text-xs text-muted-foreground">appointments completed</p>
+            <p className="text-xs text-muted-foreground">นัดหมายที่เสร็จสิ้น</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Next Appointment</CardTitle>
+            <CardTitle className="text-sm font-medium">นัดหมายถัดไป</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
              {todaysAppointments.length > 0 ? (
                 <>
                  <div className="text-2xl font-bold">{todaysAppointments[0].time}</div>
-                 <p className="text-xs text-muted-foreground">with {todaysAppointments[0].patientName}</p>
+                 <p className="text-xs text-muted-foreground">กับ {todaysAppointments[0].patientName}</p>
                 </>
              ) : (
-                <p className="text-sm text-muted-foreground">No more appointments today.</p>
+                <p className="text-sm text-muted-foreground">ไม่มีนัดหมายเพิ่มเติมสำหรับวันนี้</p>
              )}
           </CardContent>
         </Card>
@@ -71,8 +71,8 @@ export function DoctorDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Today's Schedule</CardTitle>
-          <CardDescription>A list of your appointments for today.</CardDescription>
+          <CardTitle>ตารางงานวันนี้</CardTitle>
+          <CardDescription>รายการนัดหมายของคุณสำหรับวันนี้</CardDescription>
         </CardHeader>
         <CardContent>
           <ul className="space-y-4">
@@ -89,10 +89,10 @@ export function DoctorDashboard() {
                   </div>
                 </div>
                 <Button asChild variant="outline" size="sm">
-                  <Link href={`/patients/${appt.patientId}`}>View Record</Link>
+                  <Link href={`/patients/${appt.patientId}`}>ดูบันทึก</Link>
                 </Button>
               </li>
-            )) : <p className="text-sm text-muted-foreground text-center py-4">Your schedule is clear for the rest of the day.</p>}
+            )) : <p className="text-sm text-muted-foreground text-center py-4">ตารางงานของคุณว่างสำหรับวันนี้</p>}
           </ul>
         </CardContent>
       </Card>

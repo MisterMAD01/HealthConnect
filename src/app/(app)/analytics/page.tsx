@@ -7,35 +7,36 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from 
 import { users } from "@/lib/data"
 
 const appointmentData = [
-  { month: "Jan", total: Math.floor(Math.random() * 100) + 50 },
-  { month: "Feb", total: Math.floor(Math.random() * 100) + 50 },
-  { month: "Mar", total: Math.floor(Math.random() * 100) + 50 },
-  { month: "Apr", total: Math.floor(Math.random() * 100) + 50 },
-  { month: "May", total: Math.floor(Math.random() * 100) + 50 },
-  { month: "Jun", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "ม.ค.", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "ก.พ.", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "มี.ค.", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "เม.ย.", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "พ.ค.", total: Math.floor(Math.random() * 100) + 50 },
+    { month: "มิ.ย.", total: Math.floor(Math.random() * 100) + 50 },
 ]
 
 const chartConfig = {
   total: {
-    label: "Appointments",
+    label: "การนัดหมาย",
   },
 }
 
 const doctorVerificationData = users.filter(u => u.role === 'Doctor').reduce((acc, doctor) => {
     const status = doctor.verificationStatus || 'N/A';
-    const existing = acc.find(item => item.name === status);
+    const statusTH = status === 'Verified' ? 'ตรวจสอบแล้ว' : status === 'Pending' ? 'รอดำเนินการ' : status === 'Rejected' ? 'ถูกปฏิเสธ' : 'N/A';
+    const existing = acc.find(item => item.name === statusTH);
     if (existing) {
         existing.value += 1;
     } else {
-        acc.push({ name: status, value: 1 });
+        acc.push({ name: statusTH, value: 1 });
     }
     return acc;
 }, [] as { name: string, value: number }[]);
 
 const COLORS = {
-    'Verified': 'hsl(var(--chart-2))',
-    'Pending': 'hsl(var(--chart-4))',
-    'Rejected': 'hsl(var(--destructive))',
+    'ตรวจสอบแล้ว': 'hsl(var(--chart-2))',
+    'รอดำเนินการ': 'hsl(var(--chart-4))',
+    'ถูกปฏิเสธ': 'hsl(var(--destructive))',
 };
 
 
@@ -43,14 +44,14 @@ export default function AnalyticsPage() {
     return (
         <>
             <PageHeader
-                title="Platform Analytics"
-                description="An overview of user activity and platform performance."
+                title="การวิเคราะห์แพลตฟอร์ม"
+                description="ภาพรวมกิจกรรมของผู้ใช้และประสิทธิภาพของแพลตฟอร์ม"
             />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Appointments Trend</CardTitle>
-                        <CardDescription>Total appointments over the last 6 months.</CardDescription>
+                        <CardTitle>แนวโน้มการนัดหมาย</CardTitle>
+                        <CardDescription>การนัดหมายทั้งหมดในช่วง 6 เดือนที่ผ่านมา</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -66,8 +67,8 @@ export default function AnalyticsPage() {
                 </Card>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Doctor Verification Status</CardTitle>
-                        <CardDescription>Distribution of doctor account statuses.</CardDescription>
+                        <CardTitle>สถานะการยืนยันตัวตนแพทย์</CardTitle>
+                        <CardDescription>การกระจายสถานะบัญชีของแพทย์</CardDescription>
                     </CardHeader>
                      <CardContent className="flex justify-center">
                         <ChartContainer config={{}} className="h-[300px] w-full">

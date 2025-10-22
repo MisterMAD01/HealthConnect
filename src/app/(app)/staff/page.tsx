@@ -24,19 +24,19 @@ export default function StaffPage() {
         )
     );
     toast({
-        title: "Status Updated",
-        description: `Doctor account has been ${newStatus.toLowerCase()}.`
+        title: "อัปเดตสถานะแล้ว",
+        description: `บัญชีแพทย์ได้รับการ ${newStatus === 'Verified' ? 'อนุมัติ' : 'ปฏิเสธ'} แล้ว`
     })
   };
 
   const getStatusBadge = (status: User['verificationStatus']) => {
     switch (status) {
       case 'Verified':
-        return <Badge variant="default" className="bg-green-500 hover:bg-green-600">Verified</Badge>;
+        return <Badge variant="default" className="bg-green-500 hover:bg-green-600">ตรวจสอบแล้ว</Badge>;
       case 'Pending':
-        return <Badge variant="secondary">Pending</Badge>;
+        return <Badge variant="secondary">รอดำเนินการ</Badge>;
       case 'Rejected':
-        return <Badge variant="destructive">Rejected</Badge>;
+        return <Badge variant="destructive">ถูกปฏิเสธ</Badge>;
       default:
         return <Badge variant="outline">N/A</Badge>;
     }
@@ -45,18 +45,18 @@ export default function StaffPage() {
   return (
     <>
       <PageHeader
-        title="Staff Management"
-        description="Approve, manage, and view all doctor accounts on the platform."
+        title="การจัดการบุคลากร"
+        description="อนุมัติ จัดการ และดูบัญชีแพทย์ทั้งหมดบนแพลตฟอร์ม"
       />
       <Card>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Doctor</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Verification Status</TableHead>
-                <TableHead><span className="sr-only">Actions</span></TableHead>
+                <TableHead>แพทย์</TableHead>
+                <TableHead>อีเมล</TableHead>
+                <TableHead>สถานะการยืนยันตัวตน</TableHead>
+                <TableHead><span className="sr-only">การดำเนินการ</span></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -80,15 +80,15 @@ export default function StaffPage() {
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Actions</span>
+                          <span className="sr-only">การดำเนินการ</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleStatusChange(doctor.uid, 'Verified')}>
-                          <Check className="mr-2 h-4 w-4" /> Approve
+                          <Check className="mr-2 h-4 w-4" /> อนุมัติ
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleStatusChange(doctor.uid, 'Rejected')}>
-                          <X className="mr-2 h-4 w-4" /> Reject
+                          <X className="mr-2 h-4 w-4" /> ปฏิเสธ
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

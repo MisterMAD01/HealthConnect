@@ -25,8 +25,8 @@ export default function MedicationsPage() {
       )
     );
     toast({
-        title: `Reminders ${checked ? 'Enabled' : 'Disabled'}`,
-        description: `Push notifications for ${medications.find(m => m.id === medId)?.name} have been updated.`,
+        title: `การแจ้งเตือน ${checked ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}`,
+        description: `การแจ้งเตือนแบบพุชสำหรับ ${medications.find(m => m.id === medId)?.name} ได้รับการอัปเดตแล้ว`,
     });
   };
 
@@ -35,14 +35,14 @@ export default function MedicationsPage() {
   return (
     <>
       <PageHeader
-        title="My Medications"
-        description="Manage your prescribed medications and set up reminders."
+        title="ยาของฉัน"
+        description="จัดการยาที่สั่งและตั้งค่าการแจ้งเตือน"
       />
       <Card>
         <CardHeader>
-          <CardTitle>Medication List</CardTitle>
+          <CardTitle>รายการยา</CardTitle>
           <CardDescription>
-            Enable push notification reminders for your medications below. This would be managed by a server-side process.
+            เปิดใช้งานการแจ้งเตือนแบบพุชสำหรับยาของคุณด้านล่างนี้ ส่วนนี้จะถูกจัดการโดยกระบวนการฝั่งเซิร์ฟเวอร์
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,19 +58,19 @@ export default function MedicationsPage() {
                 </div>
                 <div className="flex items-center gap-2 mt-4 sm:mt-0">
                   {med.reminders ? <Bell className="h-4 w-4 text-accent-foreground" /> : <BellOff className="h-4 w-4 text-muted-foreground" />}
-                  <Label htmlFor={`reminder-${med.id}`} className="mr-2">Reminders</Label>
+                  <Label htmlFor={`reminder-${med.id}`} className="mr-2">การแจ้งเตือน</Label>
                   <Switch
                     id={`reminder-${med.id}`}
                     checked={med.reminders}
                     onCheckedChange={(checked) => handleReminderChange(med.id, checked)}
-                    aria-label={`Toggle reminders for ${med.name}`}
+                    aria-label={`สลับการแจ้งเตือนสำหรับ ${med.name}`}
                   />
                 </div>
               </li>
             ))}
              {medications.length === 0 && (
                 <div className="text-center py-8">
-                    <p className="text-muted-foreground">No medications have been prescribed.</p>
+                    <p className="text-muted-foreground">ยังไม่มียาที่ถูกสั่ง</p>
                 </div>
              )}
           </ul>

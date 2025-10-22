@@ -27,14 +27,14 @@ export function EhrSummary({ initialEhrText }: EhrSummaryProps) {
     if ('error' in result) {
       toast({
         variant: 'destructive',
-        title: 'Error',
+        title: 'ข้อผิดพลาด',
         description: result.error,
       });
     } else {
       setSummary(result.summary);
       toast({
-        title: 'Summary Generated',
-        description: 'The AI-powered summary is ready.',
+        title: 'สร้างสรุปสำเร็จ',
+        description: 'สรุปที่ขับเคลื่อนด้วย AI พร้อมใช้งานแล้ว',
       });
     }
   };
@@ -42,21 +42,21 @@ export function EhrSummary({ initialEhrText }: EhrSummaryProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>AI-Powered EHR Summary</CardTitle>
+        <CardTitle>สรุป EHR ด้วย AI</CardTitle>
         <CardDescription>
-          Use AI to generate a concise summary of the patient's full electronic health record.
+          ใช้ AI เพื่อสร้างสรุปที่กระชับของบันทึกสุขภาพอิเล็กทรอนิกส์ฉบับเต็มของผู้ป่วย
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="font-semibold mb-2">Full Record</h3>
+            <h3 className="font-semibold mb-2">บันทึกฉบับเต็ม</h3>
             <ScrollArea className="h-72 w-full rounded-md border p-4">
               <pre className="text-sm whitespace-pre-wrap font-sans">{initialEhrText}</pre>
             </ScrollArea>
           </div>
           <div>
-            <h3 className="font-semibold mb-2">Generated Summary</h3>
+            <h3 className="font-semibold mb-2">สรุปที่สร้างขึ้น</h3>
             <div className="h-72 w-full rounded-md border p-4 bg-secondary/50 relative">
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/80">
@@ -68,7 +68,7 @@ export function EhrSummary({ initialEhrText }: EhrSummaryProps) {
                     <p className="text-sm">{summary}</p>
                 </ScrollArea>
               ) : (
-                !isLoading && <p className="text-sm text-muted-foreground">Click "Generate Summary" to see the AI-powered result here.</p>
+                !isLoading && <p className="text-sm text-muted-foreground">คลิก "สร้างสรุป" เพื่อดูผลลัพธ์ที่ขับเคลื่อนด้วย AI ที่นี่</p>
               )}
             </div>
           </div>
@@ -80,7 +80,7 @@ export function EhrSummary({ initialEhrText }: EhrSummaryProps) {
             ) : (
               <Wand2 className="mr-2 h-4 w-4" />
             )}
-            Generate Summary
+            สร้างสรุป
           </Button>
         </div>
       </CardContent>

@@ -16,11 +16,11 @@ export default function RecordsPage() {
   if (!ehr) {
     return (
       <>
-        <PageHeader title="My Records" description="A summary of your health information." />
+        <PageHeader title="บันทึกของฉัน" description="สรุปข้อมูลสุขภาพของคุณ" />
         <div className="text-center py-12">
             <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground" />
-            <h3 className="mt-2 text-lg font-medium">No Records Found</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Your health record has not been created yet.</p>
+            <h3 className="mt-2 text-lg font-medium">ไม่พบบันทึก</h3>
+            <p className="mt-1 text-sm text-muted-foreground">บันทึกสุขภาพของคุณยังไม่ได้ถูกสร้างขึ้น</p>
         </div>
       </>
     );
@@ -29,33 +29,33 @@ export default function RecordsPage() {
   return (
     <>
       <PageHeader
-        title="My Medical Record"
-        description={`Here is a summary of your health information, last updated on ${new Date(ehr.lastUpdated).toLocaleDateString()}.`}
+        title="บันทึกทางการแพทย์ของฉัน"
+        description={`นี่คือสรุปข้อมูลสุขภาพของคุณ อัปเดตล่าสุดเมื่อ ${new Date(ehr.lastUpdated).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`}
       />
       <div className="space-y-6">
         <Card>
             <CardHeader>
-                <CardTitle>Vitals</CardTitle>
+                <CardTitle>สัญญาณชีพ</CardTitle>
             </CardHeader>
             <CardContent className="grid md:grid-cols-3 gap-6">
                  <div className="flex items-start gap-4">
                     <HeartPulse className="h-8 w-8 text-primary mt-1" />
                     <div>
-                        <p className="text-sm text-muted-foreground">Blood Pressure</p>
+                        <p className="text-sm text-muted-foreground">ความดันโลหิต</p>
                         <p className="font-bold text-lg">{ehr.bloodPressure}</p>
                     </div>
                  </div>
                  <div className="flex items-start gap-4">
                     <Droplets className="h-8 w-8 text-primary mt-1" />
                     <div>
-                        <p className="text-sm text-muted-foreground">Heart Rate</p>
+                        <p className="text-sm text-muted-foreground">อัตราการเต้นของหัวใจ</p>
                         <p className="font-bold text-lg">{ehr.heartRate} BPM</p>
                     </div>
                  </div>
                  <div className="flex items-start gap-4">
                     <Thermometer className="h-8 w-8 text-primary mt-1" />
                     <div>
-                        <p className="text-sm text-muted-foreground">Temperature</p>
+                        <p className="text-sm text-muted-foreground">อุณหภูมิ</p>
                         <p className="font-bold text-lg">{ehr.temperature}°F</p>
                     </div>
                  </div>
@@ -65,20 +65,20 @@ export default function RecordsPage() {
         <div className="grid md:grid-cols-2 gap-6">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><AlertTriangle className="h-5 w-5" />Allergies</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><AlertTriangle className="h-5 w-5" />ประวัติการแพ้</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {ehr.allergies.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                             {ehr.allergies.map(allergy => <Badge key={allergy} variant="destructive">{allergy}</Badge>)}
                         </div>
-                    ) : <p className="text-sm text-muted-foreground">No known allergies.</p>}
+                    ) : <p className="text-sm text-muted-foreground">ไม่ทราบประวัติการแพ้</p>}
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Pill className="h-5 w-5" />Medications</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><Pill className="h-5 w-5" />ยาที่ใช้</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <ul className="space-y-2">
@@ -86,7 +86,7 @@ export default function RecordsPage() {
                             <li key={med.id}>
                                 <span className="font-medium">{med.name}</span> - {med.dosage}, {med.frequency}
                             </li>
-                        )) : <p className="text-sm text-muted-foreground">No medications prescribed.</p>}
+                        )) : <p className="text-sm text-muted-foreground">ไม่มียาที่สั่ง</p>}
                     </ul>
                 </CardContent>
             </Card>
@@ -94,7 +94,7 @@ export default function RecordsPage() {
 
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Stethoscope className="h-5 w-5" />Doctor's Notes</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Stethoscope className="h-5 w-5" />บันทึกของแพทย์</CardTitle>
             </CardHeader>
             <CardContent>
                 <p className="text-sm text-muted-foreground italic">"{ehr.notes}"</p>

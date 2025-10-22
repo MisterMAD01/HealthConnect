@@ -16,16 +16,16 @@ export default function AppointmentsPage() {
 
   const handleBookAppointment = (doctor: User) => {
     toast({
-      title: "Appointment Booked!",
-      description: `Your appointment with ${doctor.name} has been scheduled.`,
+      title: "จองนัดหมายสำเร็จ!",
+      description: `การนัดหมายของคุณกับ ${doctor.name} ได้รับการจัดตารางแล้ว`,
     });
   };
 
   return (
     <>
       <PageHeader
-        title="Find a Doctor"
-        description="Browse available doctors and book an appointment."
+        title="ค้นหาแพทย์"
+        description="เรียกดูแพทย์ที่มีอยู่และทำการนัดหมาย"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {doctors.map(doctor => (
@@ -40,16 +40,16 @@ export default function AppointmentsPage() {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="flex justify-center">
-                <Badge variant="outline">Verified</Badge>
+                <Badge variant="outline">ตรวจสอบแล้ว</Badge>
               </div>
               <p className="text-center text-sm text-muted-foreground mt-4">
-                Dr. Reed is a board-certified cardiologist with over 10 years of experience.
+                ดร. รีด เป็นแพทย์โรคหัวใจที่ได้รับการรับรองจากคณะกรรมการและมีประสบการณ์มากกว่า 10 ปี
               </p>
             </CardContent>
             <CardFooter>
               <Button className="w-full" onClick={() => handleBookAppointment(doctor)}>
                 <CalendarPlus className="mr-2 h-4 w-4" />
-                Book Appointment
+                จองนัดหมาย
               </Button>
             </CardFooter>
           </Card>

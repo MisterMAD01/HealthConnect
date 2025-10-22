@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user, loading, router]);
   
   if (loading || !isClient || !user) {
-    return <div className="flex h-screen w-full items-center justify-center">Loading application...</div>;
+    return <div className="flex h-screen w-full items-center justify-center">กำลังโหลดแอปพลิเคชัน...</div>;
   }
 
   return (

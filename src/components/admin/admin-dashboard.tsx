@@ -19,32 +19,32 @@ export function AdminDashboard() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Doctors</CardTitle>
+            <CardTitle className="text-sm font-medium">จำนวนแพทย์ทั้งหมด</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{doctors.length}</div>
-            <p className="text-xs text-muted-foreground">on the platform</p>
+            <p className="text-xs text-muted-foreground">บนแพลตฟอร์ม</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <CardTitle className="text-sm font-medium">จำนวนผู้ป่วยทั้งหมด</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{patients.length}</div>
-            <p className="text-xs text-muted-foreground">registered</p>
+            <p className="text-xs text-muted-foreground">ที่ลงทะเบียน</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Verifications</CardTitle>
+            <CardTitle className="text-sm font-medium">การยืนยันตัวตนที่รอดำเนินการ</CardTitle>
             <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{pendingVerification}</div>
-            <p className="text-xs text-muted-foreground">doctors awaiting approval</p>
+            <p className="text-xs text-muted-foreground">แพทย์ที่รอการอนุมัติ</p>
           </CardContent>
         </Card>
       </div>
@@ -53,11 +53,11 @@ export function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-                <CardTitle>Doctor Verification</CardTitle>
-                <CardDescription>Approve or reject new doctor accounts.</CardDescription>
+                <CardTitle>การยืนยันตัวตนแพทย์</CardTitle>
+                <CardDescription>อนุมัติหรือปฏิเสธบัญชีแพทย์ใหม่</CardDescription>
             </div>
             <Button asChild size="sm">
-                <Link href="/staff">Manage Staff</Link>
+                <Link href="/staff">จัดการบุคลากร</Link>
             </Button>
           </CardHeader>
           <CardContent>
@@ -65,26 +65,26 @@ export function AdminDashboard() {
               {doctors.filter(d => d.verificationStatus === 'Pending').slice(0, 3).map(doctor => (
                 <li key={doctor.uid} className="flex items-center justify-between">
                   <p className="font-medium">{doctor.name}</p>
-                  <Badge variant="secondary">Pending</Badge>
+                  <Badge variant="secondary">รอดำเนินการ</Badge>
                 </li>
               ))}
                {doctors.filter(d => d.verificationStatus === 'Pending').length === 0 && (
-                <p className="text-sm text-muted-foreground">No pending verifications.</p>
+                <p className="text-sm text-muted-foreground">ไม่มีการยืนยันตัวตนที่รอดำเนินการ</p>
               )}
             </ul>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Overview of recent appointments.</CardDescription>
+            <CardTitle>กิจกรรมล่าสุด</CardTitle>
+            <CardDescription>ภาพรวมของการนัดหมายล่าสุด</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3">
               {recentAppointments.map(appt => (
                 <li key={appt.id} className="flex items-center justify-between text-sm">
-                  <p><span className="font-medium">{appt.patientName}</span> with <span className="font-medium">{appt.doctorName}</span></p>
-                  <span className="text-muted-foreground">{new Date(appt.date).toLocaleDateString()}</span>
+                  <p><span className="font-medium">{appt.patientName}</span> กับ <span className="font-medium">{appt.doctorName}</span></p>
+                  <span className="text-muted-foreground">{new Date(appt.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                 </li>
               ))}
             </ul>

@@ -10,9 +10,9 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 
 const roles = [
-  { name: 'Patient', icon: User },
-  { name: 'Doctor', icon: Stethoscope },
-  { name: 'Hospital Admin', icon: Hospital },
+  { name: 'Patient', icon: User, label: 'ผู้ป่วย' },
+  { name: 'Doctor', icon: Stethoscope, label: 'แพทย์' },
+  { name: 'Hospital Admin', icon: Hospital, label: 'ผู้ดูแลระบบโรงพยาบาล' },
 ];
 
 export default function LoginPage() {
@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   if (loading || (isClient && user)) {
-    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
+    return <div className="flex h-screen w-full items-center justify-center">กำลังโหลด...</div>;
   }
   
   return (
@@ -52,8 +52,8 @@ export default function LoginPage() {
               />
             )}
           </div>
-          <CardTitle className="text-3xl font-bold font-headline">Welcome to HealthConnect</CardTitle>
-          <CardDescription>Your integrated healthcare platform. Please select your role to sign in.</CardDescription>
+          <CardTitle className="text-3xl font-bold font-headline">ยินดีต้อนรับสู่ HealthConnect</CardTitle>
+          <CardDescription>แพลตฟอร์มการดูแลสุขภาพแบบครบวงจรของคุณ กรุณาเลือกบทบาทของคุณเพื่อเข้าสู่ระบบ</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -65,15 +65,15 @@ export default function LoginPage() {
                 variant="outline"
               >
                 <role.icon className="mr-4 h-6 w-6 text-primary" />
-                <span>Sign in as {role.name}</span>
+                <span>เข้าสู่ระบบในฐานะ {role.label}</span>
               </Button>
             ))}
           </div>
         </CardContent>
       </Card>
       <footer className="mt-8 text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} HealthConnect. All rights reserved.</p>
-        <p className="mt-1">A secure and reliable healthcare solution.</p>
+        <p>&copy; {new Date().getFullYear()} HealthConnect. สงวนลิขสิทธิ์</p>
+        <p className="mt-1">โซลูชันการดูแลสุขภาพที่ปลอดภัยและเชื่อถือได้</p>
       </footer>
     </div>
   );

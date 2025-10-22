@@ -9,6 +9,6 @@ export async function getEhrSummary(ehrData: string): Promise<{ summary: string 
     return result;
   } catch (error) {
     console.error('Error getting EHR summary:', error);
-    return { error: 'Failed to generate summary. Please try again.' };
+    return { error: 'ไม่สามารถสร้างสรุปได้ โปรดลองอีกครั้ง' };
   }
 }

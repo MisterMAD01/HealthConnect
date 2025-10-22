@@ -13,7 +13,7 @@ export default function DashboardPage() {
   if (loading || !user) {
     return (
         <div>
-            <PageHeader title="Dashboard" description="Loading your personalized dashboard..." />
+            <PageHeader title="แดชบอร์ด" description="กำลังโหลดแดชบอร์ดส่วนตัวของคุณ..." />
             <div className="grid gap-6">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <Skeleton className="h-32" />
@@ -35,15 +35,15 @@ export default function DashboardPage() {
       case 'Hospital Admin':
         return <AdminDashboard />;
       default:
-        return <div>Invalid user role.</div>;
+        return <div>บทบาทผู้ใช้ไม่ถูกต้อง</div>;
     }
   };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return 'สวัสดีตอนเช้า';
+    if (hour < 18) return 'สวัสดีตอนบ่าย';
+    return 'สวัสดีตอนเย็น';
   }
 
   return (
@@ -51,9 +51,9 @@ export default function DashboardPage() {
       <PageHeader
         title={`${getGreeting()}, ${user.name.split(' ')[0]}!`}
         description={
-            user.role === 'Patient' ? "Here's a summary of your health and appointments." : 
-            user.role === 'Doctor' ? "Here's what your day looks like." :
-            "Here's an overview of the platform's activity."
+            user.role === 'Patient' ? "นี่คือสรุปสุขภาพและการนัดหมายของคุณ" : 
+            user.role === 'Doctor' ? "นี่คือตารางงานของคุณในวันนี้" :
+            "นี่คือภาพรวมกิจกรรมของแพลตฟอร์ม"
         }
       />
       {renderDashboard()}
