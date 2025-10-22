@@ -8,7 +8,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/use-auth';
@@ -23,7 +22,7 @@ import {
   Stethoscope,
   LogOut,
   Hospital,
-  User,
+  User as UserIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -68,7 +67,7 @@ export function MainSidebar() {
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case 'Patient': return <User className="h-4 w-4" />;
+      case 'Patient': return <UserIcon className="h-4 w-4" />;
       case 'Doctor': return <Stethoscope className="h-4 w-4" />;
       case 'Hospital Admin': return <Hospital className="h-4 w-4" />;
       default: return null;
@@ -77,7 +76,7 @@ export function MainSidebar() {
 
   if (!user) return null;
 
-  const currentNav = navItems[user.role];
+  const currentNav = navItems[user.role as keyof typeof navItems];
 
   return (
     <Sidebar>
@@ -93,12 +92,12 @@ export function MainSidebar() {
         <SidebarMenu>
           {currentNav.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} passHref>
-                <SidebarMenuButton asChild isActive={pathname === item.href}>
+              <SidebarMenuButton asChild isActive={pathname === item.href}>
+                <Link href={item.href}>
                   <item.icon />
                   <span>{item.label}</span>
-                </SidebarMenuButton>
-              </Link>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
