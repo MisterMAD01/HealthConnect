@@ -24,6 +24,8 @@ export default function AdminPatientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isNewPatientDialogOpen, setIsNewPatientDialogOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
   const { toast } = useToast();
 
   const handleStatusChange = (userId: string, newStatus: 'Verified' | 'Rejected') => {
@@ -54,11 +56,11 @@ export default function AdminPatientsPage() {
   );
 
   const handleAddPatient = () => {
-    if (!selectedPatientId) {
+    if (!selectedPatientId || !newUserEmail || !newUserPassword) {
       toast({
         variant: 'destructive',
-        title: 'ไม่ได้เลือกผู้ป่วย',
-        description: 'กรุณาเลือกผู้ป่วยจากรายการ'
+        title: 'ข้อมูลไม่ครบถ้วน',
+        description: 'กรุณาเลือกผู้ป่วยและกรอกอีเมล/รหัสผ่าน'
       });
       return;
     }
@@ -74,7 +76,10 @@ export default function AdminPatientsPage() {
 
     const patientToAdd = allSystemPatients.find(p => p.uid === selectedPatientId);
     if (patientToAdd) {
-        setPatientList(prev => [...prev, patientToAdd]);
+        // Here you would typically handle the new email and password,
+        // for now, we just add the patient to the list.
+        const updatedPatient = { ...patientToAdd, email: newUserEmail };
+        setPatientList(prev => [...prev, updatedPatient]);
         toast({
             title: "เพิ่มผู้ป่วยสำเร็จ",
             description: `ผู้ป่วย ${patientToAdd.name} ถูกเพิ่มเข้าสู่รายการจัดการแล้ว`,
@@ -83,6 +88,8 @@ export default function AdminPatientsPage() {
     
     setIsNewPatientDialogOpen(false);
     setSelectedPatientId(null);
+    setNewUserEmail('');
+    setNewUserPassword('');
   };
 
   const deletePatient = (userId: string) => {
@@ -111,7 +118,14 @@ export default function AdminPatientsPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-             <Dialog open={isNewPatientDialogOpen} onOpenChange={setIsNewPatientDialogOpen}>
+             <Dialog open={isNewPatientDialogOpen} onOpenChange={(isOpen) => {
+                setIsNewPatientDialogOpen(isOpen);
+                if (!isOpen) {
+                    setSelectedPatientId(null);
+                    setNewUserEmail('');
+                    setNewUserPassword('');
+                }
+             }}>
                 <DialogTrigger asChild>
                     <Button>
                         <UserPlus className="mr-2 h-4 w-4" />
@@ -121,7 +135,7 @@ export default function AdminPatientsPage() {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>เพิ่มผู้ป่วยเข้าสู่รายการจัดการ</DialogTitle>
-                        <DialogDescription>เลือกผู้ป่วยจากในระบบเพื่อเพิ่มเข้ามาในรายการ</DialogDescription>
+                        <DialogDescription>เลือกผู้ป่วยและกำหนดข้อมูลการเข้าสู่ระบบ</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -137,9 +151,21 @@ export default function AdminPatientsPage() {
                                 </SelectContent>
                             </Select>
                         </div>
+                        {selectedPatientId && (
+                            <>
+                               <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="email" className="text-right">อีเมล</Label>
+                                    <Input id="email" type="email" value={newUserEmail} onChange={(e) => setNewUserEmail(e.target.value)} className="col-span-3" placeholder="ป้อนอีเมลใหม่" />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="password" className="text-right">รหัสผ่าน</Label>
+                                    <Input id="password" type="password" value={newUserPassword} onChange={(e) => setNewUserPassword(e.target.value)} className="col-span-3" placeholder="ป้อนรหัสผ่าน" />
+                                </div>
+                            </>
+                        )}
                     </div>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleAddPatient}>เพิ่มเข้าในรายการ</Button>
+                        <Button type="submit" onClick={handleAddPatient} disabled={!selectedPatientId}>เพิ่มเข้าในรายการ</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
