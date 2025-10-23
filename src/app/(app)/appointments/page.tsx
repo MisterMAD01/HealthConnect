@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { appointments as initialAppointments, users } from "@/lib/data";
 import { Appointment, User } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { CalendarClock, PlusCircle } from "lucide-react";
+import { CalendarClock, PlusCircle, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function AppointmentsPage() {
     const { user } = useAuth();
@@ -36,7 +38,7 @@ export default function AppointmentsPage() {
                 case 'Completed':
                     return <Badge variant="default" className="bg-green-500">เสร็จสิ้น</Badge>;
                 case 'Cancelled':
-                    return <Badge variant="destructive">ยกยกเลิก</Badge>;
+                    return <Badge variant="destructive">ยกเลิก</Badge>;
                 default:
                     return <Badge variant="outline">{status}</Badge>;
             }
@@ -113,6 +115,12 @@ export default function AppointmentsPage() {
             setDate(new Date());
             toast({ title: 'สร้างนัดหมายสำเร็จ', description: `ได้สร้างนัดหมายสำหรับ ${patient.name} แล้ว` });
         };
+        
+        const handleStatusChange = (appointmentId: string, status: Appointment['status']) => {
+            setAppointments(prev => prev.map(appt => appt.id === appointmentId ? { ...appt, status } : appt));
+            toast({ title: 'อัปเดตสถานะสำเร็จ', description: `สถานะการนัดหมายถูกเปลี่ยนเป็น "${status}"` });
+        }
+
 
         const getStatusBadge = (status: Appointment['status']) => {
             switch (status) {
@@ -198,9 +206,30 @@ export default function AppointmentsPage() {
                                                 <p className="text-sm text-muted-foreground">
                                                     {format(new Date(appt.date), 'd MMMM yyyy', { locale: th })} - เวลา {appt.time}
                                                 </p>
+                                                {getStatusBadge(appt.status)}
                                             </div>
                                         </div>
-                                        {getStatusBadge(appt.status)}
+                                        <div className="flex items-center gap-2">
+                                            <Button asChild variant="outline" size="sm">
+                                                <Link href={`/patients/${appt.patientId}`}>
+                                                    บันทึกข้อมูล
+                                                </Link>
+                                            </Button>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>อัปเดตสถานะ</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem onClick={() => handleStatusChange(appt.id, 'Scheduled')}>กำหนดเวลาแล้ว</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleStatusChange(appt.id, 'Completed')}>เสร็จสิ้น</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleStatusChange(appt.id, 'Cancelled')}>ยกเลิก</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
