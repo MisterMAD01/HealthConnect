@@ -15,12 +15,15 @@ import { Check, MoreHorizontal, Search, Trash2, X, UserPlus } from "lucide-react
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 export default function AdminPatientsPage() {
-  const [patientList, setPatientList] = useState<User[]>(users.filter(u => u.role === 'Patient'));
+  const allSystemPatients = users.filter(u => u.role === 'Patient');
+  const [patientList, setPatientList] = useState<User[]>(allSystemPatients);
   const [searchTerm, setSearchTerm] = useState('');
   const [isNewPatientDialogOpen, setIsNewPatientDialogOpen] = useState(false);
-  const [newPatient, setNewPatient] = useState({ name: '', email: '' });
+  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleStatusChange = (userId: string, newStatus: 'Verified' | 'Rejected') => {
@@ -51,29 +54,35 @@ export default function AdminPatientsPage() {
   );
 
   const handleAddPatient = () => {
-    if (!newPatient.name || !newPatient.email) {
+    if (!selectedPatientId) {
       toast({
         variant: 'destructive',
-        title: 'ข้อมูลไม่ครบถ้วน',
-        description: 'กรุณากรอกชื่อและอีเมล'
+        title: 'ไม่ได้เลือกผู้ป่วย',
+        description: 'กรุณาเลือกผู้ป่วยจากรายการ'
       });
       return;
     }
-    const newUser: User = {
-        uid: `patient${patientList.length + 10}`, // Fake UID
-        name: newPatient.name,
-        email: newPatient.email,
-        role: 'Patient',
-        avatarUrl: `https://picsum.photos/seed/${Math.random()}/200/200`,
-        verificationStatus: 'Verified'
-    };
-    setPatientList(prev => [...prev, newUser]);
+
+    if (patientList.some(p => p.uid === selectedPatientId)) {
+       toast({
+        variant: 'destructive',
+        title: 'ผู้ป่วยอยู่ในรายการแล้ว',
+        description: 'ผู้ป่วยที่คุณเลือกอยู่ในรายการจัดการแล้ว'
+      });
+      return;
+    }
+
+    const patientToAdd = allSystemPatients.find(p => p.uid === selectedPatientId);
+    if (patientToAdd) {
+        setPatientList(prev => [...prev, patientToAdd]);
+        toast({
+            title: "เพิ่มผู้ป่วยสำเร็จ",
+            description: `ผู้ป่วย ${patientToAdd.name} ถูกเพิ่มเข้าสู่รายการจัดการแล้ว`,
+        });
+    }
+    
     setIsNewPatientDialogOpen(false);
-    setNewPatient({ name: '', email: '' });
-    toast({
-        title: "เพิ่มผู้ป่วยสำเร็จ",
-        description: `ผู้ป่วย ${newUser.name} ถูกเพิ่มเข้าสู่ระบบแล้ว`,
-    });
+    setSelectedPatientId(null);
   };
 
   const deletePatient = (userId: string) => {
@@ -106,26 +115,31 @@ export default function AdminPatientsPage() {
                 <DialogTrigger asChild>
                     <Button>
                         <UserPlus className="mr-2 h-4 w-4" />
-                        เพิ่มผู้ป่วยใหม่
+                        เพิ่มผู้ป่วย
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>เพิ่มบัญชีผู้ป่วยใหม่</DialogTitle>
-                        <DialogDescription>ป้อนข้อมูลเพื่อสร้างบัญชีสำหรับผู้ป่วยใหม่</DialogDescription>
+                        <DialogTitle>เพิ่มผู้ป่วยเข้าสู่รายการจัดการ</DialogTitle>
+                        <DialogDescription>เลือกผู้ป่วยจากในระบบเพื่อเพิ่มเข้ามาในรายการ</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">ชื่อ</Label>
-                            <Input id="name" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} className="col-span-3" placeholder="เช่น สมชาย ใจดี" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right">อีเมล</Label>
-                            <Input id="email" type="email" value={newPatient.email} onChange={e => setNewPatient({...newPatient, email: e.target.value})} className="col-span-3" placeholder="เช่น somchai@example.com" />
+                            <Label htmlFor="patient" className="text-right">ชื่อผู้ป่วย</Label>
+                            <Select onValueChange={setSelectedPatientId}>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="เลือกผู้ป่วย" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {allSystemPatients.map(p => (
+                                        <SelectItem key={p.uid} value={p.uid}>{p.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleAddPatient}>สร้างบัญชีผู้ป่วย</Button>
+                        <Button type="submit" onClick={handleAddPatient}>เพิ่มเข้าในรายการ</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
