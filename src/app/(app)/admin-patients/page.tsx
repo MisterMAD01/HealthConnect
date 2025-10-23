@@ -31,7 +31,7 @@ export default function AdminPatientsPage() {
     );
     toast({
         title: "อัปเดตสถานะแล้ว",
-        description: `บัญชีผู้ป่วยได้รับการอัปเดตแล้ว`
+        description: `บัญชีผู้ป่วยได้รับการ ${newStatus === 'Verified' ? 'เปิดใช้งาน' : 'ระงับ'} แล้ว`
     })
   };
 
@@ -76,18 +76,27 @@ export default function AdminPatientsPage() {
     });
   };
 
+  const deletePatient = (userId: string) => {
+    setPatientList(currentList => currentList.filter(user => user.uid !== userId));
+    toast({
+      title: 'ลบบัญชีสำเร็จ',
+      description: 'บัญชีผู้ป่วยได้ถูกลบออกจากระบบแล้ว',
+    });
+  };
+
+
   return (
     <>
       <PageHeader
         title="จัดการบัญชีผู้ป่วย"
-        description="ดูและจัดการบัญชีผู้ป่วยทั้งหมดบนแพลตฟอร์ม"
+        description="ดู ค้นหา และจัดการบัญชีผู้ป่วยทั้งหมดบนแพลตฟอร์ม"
       >
         <div className="flex items-center gap-2">
             <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="ค้นหาผู้ป่วย..."
+                    placeholder="ค้นหาผู้ป่วยด้วยชื่อ..."
                     className="pl-8 sm:w-[250px] md:w-[300px]"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -97,26 +106,26 @@ export default function AdminPatientsPage() {
                 <DialogTrigger asChild>
                     <Button>
                         <UserPlus className="mr-2 h-4 w-4" />
-                        เพิ่มผู้ป่วย
+                        เพิ่มผู้ป่วยใหม่
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>เพิ่มผู้ป่วยใหม่</DialogTitle>
-                        <DialogDescription>ป้อนข้อมูลสำหรับผู้ป่วยใหม่ด้านล่าง</DialogDescription>
+                        <DialogTitle>เพิ่มบัญชีผู้ป่วยใหม่</DialogTitle>
+                        <DialogDescription>ป้อนข้อมูลเพื่อสร้างบัญชีสำหรับผู้ป่วยใหม่</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">ชื่อ</Label>
-                            <Input id="name" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} className="col-span-3" />
+                            <Input id="name" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} className="col-span-3" placeholder="เช่น สมชาย ใจดี" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="email" className="text-right">อีเมล</Label>
-                            <Input id="email" type="email" value={newPatient.email} onChange={e => setNewPatient({...newPatient, email: e.target.value})} className="col-span-3" />
+                            <Input id="email" type="email" value={newPatient.email} onChange={e => setNewPatient({...newPatient, email: e.target.value})} className="col-span-3" placeholder="เช่น somchai@example.com" />
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleAddPatient}>เพิ่มผู้ป่วย</Button>
+                        <Button type="submit" onClick={handleAddPatient}>สร้างบัญชีผู้ป่วย</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -130,7 +139,7 @@ export default function AdminPatientsPage() {
                 <TableHead>ผู้ป่วย</TableHead>
                 <TableHead>อีเมล</TableHead>
                 <TableHead>สถานะบัญชี</TableHead>
-                <TableHead><span className="sr-only">การดำเนินการ</span></TableHead>
+                <TableHead className="text-right">การดำเนินการ</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -164,7 +173,7 @@ export default function AdminPatientsPage() {
                         <DropdownMenuItem onClick={() => handleStatusChange(patient.uid, 'Rejected')}>
                           <X className="mr-2 h-4 w-4" /> ระงับบัญชี
                         </DropdownMenuItem>
-                         <DropdownMenuItem className="text-destructive">
+                         <DropdownMenuItem className="text-destructive" onClick={() => deletePatient(patient.uid)}>
                           <Trash2 className="mr-2 h-4 w-4" /> ลบบัญชี
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -176,7 +185,7 @@ export default function AdminPatientsPage() {
           </Table>
            {filteredPatients.length === 0 && (
             <div className="text-center p-8 text-muted-foreground">
-              ไม่พบผู้ป่วย
+              ไม่พบผู้ป่วยที่ตรงกับคำค้นหา
             </div>
            )}
         </CardContent>
