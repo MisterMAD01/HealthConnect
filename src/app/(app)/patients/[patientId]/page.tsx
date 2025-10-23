@@ -15,9 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-export default function PatientRecordPage({ params }: { params: { patientId: string } }) {
-  const patient = users.find(u => u.uid === params.patientId);
-  const ehrData = ehrs.find(e => e.patientId === params.patientId);
+export default function PatientRecordPage({ params: { patientId } }: { params: { patientId: string } }) {
+  const patient = users.find(u => u.uid === patientId);
+  const ehrData = ehrs.find(e => e.patientId === patientId);
   
   const [isEditing, setIsEditing] = useState(false);
   const [ehr, setEhr] = useState(ehrData);
