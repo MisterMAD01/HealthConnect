@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
-import { appointments as initialAppointments, users } from "@/lib/data";
-import { Appointment, User } from "@/lib/types";
+import { appointments as initialAppointments, users, ehrs } from "@/lib/data";
+import { Appointment, User, EHR } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { CalendarClock, PlusCircle, MoreHorizontal } from "lucide-react";
+import { CalendarClock, PlusCircle, MoreHorizontal, Save } from "lucide-react";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { Button } from '@/components/ui/button';
@@ -21,12 +21,47 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Textarea } from '@/components/ui/textarea';
+
+// Define an empty EHR structure for the new record form
+const emptyEhr: Partial<EHR> = {
+    bloodPressure: '',
+    heartRate: 0,
+    temperature: 0,
+    allergies: [],
+    medications: [],
+    notes: '',
+};
 
 export default function AppointmentsPage() {
     const { user } = useAuth();
     const { toast } = useToast();
 
+    // State for health record dialog
+    const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
+    const [currentAppointment, setCurrentAppointment] = useState<Appointment | null>(null);
+    const [healthRecord, setHealthRecord] = useState<Partial<EHR>>(emptyEhr);
+
+
     if (!user) return null;
+    
+    const openRecordDialog = (appointment: Appointment) => {
+        setCurrentAppointment(appointment);
+        setHealthRecord(emptyEhr); // Reset form
+        setIsRecordDialogOpen(true);
+    };
+
+    const handleSaveHealthRecord = () => {
+        // In a real app, you would save `healthRecord` to the database
+        // associated with `currentAppointment.patientId` and the appointment itself.
+        console.log("Saving health record:", healthRecord, "for patient:", currentAppointment?.patientId);
+        toast({
+            title: "บันทึกข้อมูลสุขภาพสำเร็จ",
+            description: `ข้อมูลสำหรับ ${currentAppointment?.patientName} ได้รับการบันทึกแล้ว`,
+        });
+        setIsRecordDialogOpen(false);
+    };
+
 
     if (user.role === 'Patient') {
         const patientAppointments = initialAppointments.filter(a => a.patientId === user.uid);
@@ -210,10 +245,8 @@ export default function AppointmentsPage() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Button asChild variant="outline" size="sm">
-                                                <Link href={`/patients/${appt.patientId}`}>
-                                                    บันทึกข้อมูล
-                                                </Link>
+                                            <Button variant="outline" size="sm" onClick={() => openRecordDialog(appt)}>
+                                                บันทึกข้อมูล
                                             </Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
@@ -240,6 +273,44 @@ export default function AppointmentsPage() {
                         )}
                     </CardContent>
                 </Card>
+
+                {/* Health Record Dialog */}
+                <Dialog open={isRecordDialogOpen} onOpenChange={setIsRecordDialogOpen}>
+                    <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                            <DialogTitle>เพิ่มข้อมูลสุขภาพสำหรับ {currentAppointment?.patientName}</DialogTitle>
+                            <DialogDescription>
+                                บันทึกข้อมูลจากการนัดหมายวันที่ {currentAppointment ? format(new Date(currentAppointment.date), 'd MMMM yyyy', { locale: th }) : ''}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto pr-4">
+                             <div className="grid grid-cols-4 items-center gap-4">
+                                <Label className="text-right">ความดันโลหิต</Label>
+                                <Input value={healthRecord.bloodPressure} onChange={(e) => setHealthRecord({...healthRecord, bloodPressure: e.target.value})} className="col-span-3" placeholder="เช่น 120/80 mmHg" />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label className="text-right">อัตราการเต้นหัวใจ</Label>
+                                <Input type="number" value={healthRecord.heartRate} onChange={(e) => setHealthRecord({...healthRecord, heartRate: parseInt(e.target.value)})} className="col-span-3" placeholder="BPM" />
+                            </div>
+                             <div className="grid grid-cols-4 items-center gap-4">
+                                <Label className="text-right">อุณหภูมิ</Label>
+                                <Input type="number" step="0.1" value={healthRecord.temperature} onChange={(e) => setHealthRecord({...healthRecord, temperature: parseFloat(e.target.value)})} className="col-span-3" placeholder="°F" />
+                            </div>
+                             <div className="grid grid-cols-4 items-center gap-4">
+                                <Label className="text-right">ประวัติการแพ้</Label>
+                                <Input value={healthRecord.allergies?.join(', ')} onChange={(e) => setHealthRecord({...healthRecord, allergies: e.target.value.split(',').map(s => s.trim())})} className="col-span-3" placeholder="คั่นด้วยจุลภาค, เช่น ถั่ว" />
+                            </div>
+                             <div className="grid grid-cols-4 items-start gap-4">
+                                <Label className="text-right pt-2">บันทึกของแพทย์</Label>
+                                <Textarea value={healthRecord.notes} onChange={(e) => setHealthRecord({...healthRecord, notes: e.target.value})} className="col-span-3" placeholder="เพิ่มบันทึกเกี่ยวกับการตรวจ..." />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button variant="ghost" onClick={() => setIsRecordDialogOpen(false)}>ยกเลิก</Button>
+                            <Button onClick={handleSaveHealthRecord}><Save className="mr-2 h-4 w-4" />บันทึกข้อมูล</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </>
         );
     }
