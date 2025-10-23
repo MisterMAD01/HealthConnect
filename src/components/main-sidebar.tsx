@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
-  CalendarPlus,
+  CalendarClock,
   FileText,
   Pill,
   Users,
@@ -23,6 +23,7 @@ import {
   LogOut,
   Hospital,
   User as UserIcon,
+  CalendarPlus,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -32,13 +33,14 @@ import type { User as UserType } from '@/lib/types';
 
 const patientNav = [
   { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
-  { href: '/appointments', label: 'จองนัดหมาย', icon: CalendarPlus },
+  { href: '/appointments', label: 'การนัดหมายของฉัน', icon: CalendarClock },
   { href: '/records', label: 'บันทึกของฉัน', icon: FileText },
   { href: '/medications', label: 'ยา', icon: Pill },
 ];
 
 const doctorNav = [
   { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
+  { href: '/appointments', label: 'การนัดหมาย', icon: CalendarPlus },
   { href: '/patients', label: 'ผู้ป่วย', icon: Users },
 ];
 
@@ -99,7 +101,7 @@ export function MainSidebar() {
         <SidebarMenu>
           {currentNav.map((item) => (
             <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild isActive={pathname === item.href}>
+                <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
                     <Link href={item.href}>
                         <item.icon />
                         <span>{item.label}</span>
