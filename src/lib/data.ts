@@ -4,8 +4,8 @@ import { PlaceHolderImages } from './placeholder-images';
 const getAvatar = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || '';
 
 export const users: User[] = [
-  { uid: 'patient1', name: 'เลียม คาร์เตอร์', email: 'liam.carter@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-1') },
-  { uid: 'patient2', name: 'โอลิเวีย เฉิน', email: 'olivia.chen@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-2') },
+  { uid: 'patient1', name: 'เลียม คาร์เตอร์', email: 'liam.carter@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-1'), verificationStatus: 'Verified' },
+  { uid: 'patient2', name: 'โอลิเวีย เฉิน', email: 'olivia.chen@example.com', role: 'Patient', avatarUrl: getAvatar('avatar-2'), verificationStatus: 'Verified' },
   { uid: 'doctor1', name: 'พญ. เอเวลิน รีด', email: 'evelyn.reed@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-3'), verificationStatus: 'Verified' },
   { uid: 'doctor2', name: 'นพ. เบน สโตน', email: 'ben.stone@clinic.com', role: 'Doctor', avatarUrl: getAvatar('avatar-4'), verificationStatus: 'Pending' },
   { uid: 'admin1', name: 'โนอาห์ พาเทล', email: 'noah.patel@hospital.com', role: 'Hospital Admin', avatarUrl: getAvatar('avatar-5') },

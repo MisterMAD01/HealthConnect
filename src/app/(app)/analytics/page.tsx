@@ -33,10 +33,23 @@ const doctorVerificationData = users.filter(u => u.role === 'Doctor').reduce((ac
     return acc;
 }, [] as { name: string, value: number }[]);
 
-const COLORS = {
+const patientVerificationData = users.filter(u => u.role === 'Patient').reduce((acc, patient) => {
+    const status = patient.verificationStatus || 'N/A';
+    const statusTH = status === 'Verified' ? 'ใช้งานอยู่' : 'N/A';
+    const existing = acc.find(item => item.name === statusTH);
+    if (existing) {
+        existing.value += 1;
+    } else {
+        acc.push({ name: statusTH, value: 1 });
+    }
+    return acc;
+}, [] as { name: string, value: number }[]);
+
+const COLORS_VERIFICATION = {
     'ตรวจสอบแล้ว': 'hsl(var(--chart-2))',
     'รอดำเนินการ': 'hsl(var(--chart-4))',
     'ถูกปฏิเสธ': 'hsl(var(--destructive))',
+    'ใช้งานอยู่': 'hsl(var(--chart-1))',
 };
 
 
@@ -47,7 +60,7 @@ export default function AnalyticsPage() {
                 title="การวิเคราะห์แพลตฟอร์ม"
                 description="ภาพรวมกิจกรรมของผู้ใช้และประสิทธิภาพของแพลตฟอร์ม"
             />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <Card>
                     <CardHeader>
                         <CardTitle>แนวโน้มการนัดหมาย</CardTitle>
@@ -76,7 +89,27 @@ export default function AnalyticsPage() {
                                 <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
                                 <Pie data={doctorVerificationData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
                                     {doctorVerificationData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || '#8884d8'} />
+                                        <Cell key={`cell-${index}`} fill={COLORS_VERIFICATION[entry.name as keyof typeof COLORS_VERIFICATION] || '#8884d8'} />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>สถานะบัญชีผู้ป่วย</CardTitle>
+                        <CardDescription>การกระจายสถานะบัญชีของผู้ป่วย</CardDescription>
+                    </CardHeader>
+                     <CardContent className="flex justify-center">
+                        <ChartContainer config={{}} className="h-[300px] w-full">
+                           <PieChart>
+                                <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                                <Pie data={patientVerificationData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+                                    {patientVerificationData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS_VERIFICATION[entry.name as keyof typeof COLORS_VERIFICATION] || '#8884d8'} />
                                     ))}
                                 </Pie>
                             </PieChart>

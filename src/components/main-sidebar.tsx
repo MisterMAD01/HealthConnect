@@ -46,7 +46,8 @@ const doctorNav = [
 
 const adminNav = [
   { href: '/dashboard', label: 'แดชบอร์ด', icon: LayoutDashboard },
-  { href: '/staff', label: 'จัดการบุคลากร', icon: Users },
+  { href: '/staff', label: 'จัดการบุคลากร', icon: Stethoscope },
+  { href: '/admin-patients', label: 'จัดการผู้ป่วย', icon: Users },
   { href: '/analytics', label: 'การวิเคราะห์', icon: BarChart2 },
 ];
 
