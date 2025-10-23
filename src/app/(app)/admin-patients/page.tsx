@@ -11,12 +11,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Check, MoreHorizontal, Search, Trash2, X } from "lucide-react";
+import { Check, MoreHorizontal, Search, Trash2, X, UserPlus } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 export default function AdminPatientsPage() {
   const [patientList, setPatientList] = useState<User[]>(users.filter(u => u.role === 'Patient'));
   const [searchTerm, setSearchTerm] = useState('');
+  const [isNewPatientDialogOpen, setIsNewPatientDialogOpen] = useState(false);
+  const [newPatient, setNewPatient] = useState({ name: '', email: '' });
   const { toast } = useToast();
 
   const handleStatusChange = (userId: string, newStatus: 'Verified' | 'Rejected') => {
@@ -46,21 +50,76 @@ export default function AdminPatientsPage() {
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleAddPatient = () => {
+    if (!newPatient.name || !newPatient.email) {
+      toast({
+        variant: 'destructive',
+        title: 'ข้อมูลไม่ครบถ้วน',
+        description: 'กรุณากรอกชื่อและอีเมล'
+      });
+      return;
+    }
+    const newUser: User = {
+        uid: `patient${patientList.length + 10}`, // Fake UID
+        name: newPatient.name,
+        email: newPatient.email,
+        role: 'Patient',
+        avatarUrl: `https://picsum.photos/seed/${Math.random()}/200/200`,
+        verificationStatus: 'Verified'
+    };
+    setPatientList(prev => [...prev, newUser]);
+    setIsNewPatientDialogOpen(false);
+    setNewPatient({ name: '', email: '' });
+    toast({
+        title: "เพิ่มผู้ป่วยสำเร็จ",
+        description: `ผู้ป่วย ${newUser.name} ถูกเพิ่มเข้าสู่ระบบแล้ว`,
+    });
+  };
+
   return (
     <>
       <PageHeader
         title="จัดการบัญชีผู้ป่วย"
         description="ดูและจัดการบัญชีผู้ป่วยทั้งหมดบนแพลตฟอร์ม"
       >
-        <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-                type="search"
-                placeholder="ค้นหาผู้ป่วย..."
-                className="pl-8 sm:w-[250px] md:w-[300px]"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="flex items-center gap-2">
+            <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="ค้นหาผู้ป่วย..."
+                    className="pl-8 sm:w-[250px] md:w-[300px]"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+             <Dialog open={isNewPatientDialogOpen} onOpenChange={setIsNewPatientDialogOpen}>
+                <DialogTrigger asChild>
+                    <Button>
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        เพิ่มผู้ป่วย
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>เพิ่มผู้ป่วยใหม่</DialogTitle>
+                        <DialogDescription>ป้อนข้อมูลสำหรับผู้ป่วยใหม่ด้านล่าง</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">ชื่อ</Label>
+                            <Input id="name" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="email" className="text-right">อีเมล</Label>
+                            <Input id="email" type="email" value={newPatient.email} onChange={e => setNewPatient({...newPatient, email: e.target.value})} className="col-span-3" />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit" onClick={handleAddPatient}>เพิ่มผู้ป่วย</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
       </PageHeader>
       <Card>

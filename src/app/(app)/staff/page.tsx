@@ -10,11 +10,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Check, MoreHorizontal, X } from "lucide-react";
+import { Check, MoreHorizontal, X, UserPlus } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function StaffPage() {
   const [staff, setStaff] = useState<User[]>(users.filter(u => u.role === 'Doctor'));
+  const [isNewStaffDialogOpen, setIsNewStaffDialogOpen] = useState(false);
+  const [newStaff, setNewStaff] = useState({ name: '', email: '' });
   const { toast } = useToast();
 
   const handleStatusChange = (userId: string, newStatus: 'Verified' | 'Rejected') => {
@@ -42,12 +47,66 @@ export default function StaffPage() {
     }
   };
 
+  const handleAddStaff = () => {
+     if (!newStaff.name || !newStaff.email) {
+      toast({
+        variant: 'destructive',
+        title: 'ข้อมูลไม่ครบถ้วน',
+        description: 'กรุณากรอกชื่อและอีเมล'
+      });
+      return;
+    }
+    const newUser: User = {
+        uid: `doctor${staff.length + 10}`, // Fake UID
+        name: newStaff.name,
+        email: newStaff.email,
+        role: 'Doctor',
+        avatarUrl: `https://picsum.photos/seed/${Math.random()}/200/200`,
+        verificationStatus: 'Pending'
+    };
+    setStaff(prev => [...prev, newUser]);
+    setIsNewStaffDialogOpen(false);
+    setNewStaff({ name: '', email: '' });
+    toast({
+        title: "เพิ่มบุคลากรสำเร็จ",
+        description: `บุคลากร ${newUser.name} ถูกเพิ่มเข้าสู่ระบบแล้ว และรอการยืนยันตัวตน`,
+    });
+  }
+
   return (
     <>
       <PageHeader
         title="การจัดการบุคลากร"
         description="อนุมัติ จัดการ และดูบัญชีแพทย์ทั้งหมดบนแพลตฟอร์ม"
-      />
+      >
+        <Dialog open={isNewStaffDialogOpen} onOpenChange={setIsNewStaffDialogOpen}>
+            <DialogTrigger asChild>
+                <Button>
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    เพิ่มบุคลากร
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>เพิ่มบุคลากรใหม่</DialogTitle>
+                    <DialogDescription>ป้อนข้อมูลสำหรับแพทย์ใหม่ด้านล่าง</DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">ชื่อ</Label>
+                        <Input id="name" value={newStaff.name} onChange={e => setNewStaff({...newStaff, name: e.target.value})} className="col-span-3" />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">อีเมล</Label>
+                        <Input id="email" type="email" value={newStaff.email} onChange={e => setNewStaff({...newStaff, email: e.target.value})} className="col-span-3" />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="submit" onClick={handleAddStaff}>เพิ่มบุคลากร</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+      </PageHeader>
       <Card>
         <CardContent className="p-0">
           <Table>
